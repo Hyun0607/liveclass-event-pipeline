@@ -14,10 +14,6 @@ DB_CONFIG = {
 
 # 이벤트 타입별 detail 테이블 INSERT SQL
 DETAIL_SQL = {
-    "page_view": (
-        "INSERT INTO event_page_view (event_id, page_name, course_id, referrer) "
-        "VALUES (%(event_id)s, %(page_name)s, %(course_id)s, %(referrer)s)"
-    ),
     "course_purchase": (
         "INSERT INTO event_course_purchase "
         "(event_id, course_id, course_title, instructor_id, price, payment_method, category) "
@@ -38,10 +34,6 @@ DETAIL_SQL = {
         "INSERT INTO event_review_submit "
         "(event_id, course_id, course_title, rating, review_text) "
         "VALUES (%(event_id)s, %(course_id)s, %(course_title)s, %(rating)s, %(review_text)s)"
-    ),
-    "search": (
-        "INSERT INTO event_search (event_id, query, result_count) "
-        "VALUES (%(event_id)s, %(query)s, %(result_count)s)"
     ),
     "error": (
         "INSERT INTO event_error (event_id, error_code, error_message, page_url) "

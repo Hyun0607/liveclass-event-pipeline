@@ -26,7 +26,6 @@ LECTURES = {
     "C008": [f"L{i:03d}" for i in range(1, 18)],
 }
 
-PAGES = ["홈", "강의목록", "강의상세", "강사소개", "장바구니", "마이페이지", "수강내역", "공지사항"]
 DEVICES = ["desktop", "mobile", "tablet"]
 PAYMENT_METHODS = ["card", "kakao_pay", "naver_pay", "toss"]
 ERROR_CODES = [
@@ -35,8 +34,6 @@ ERROR_CODES = [
     {"code": "AUTH_EXPIRED",      "message": "로그인 세션이 만료되었습니다."},
     {"code": "CONTENT_NOT_FOUND", "message": "요청한 강의를 찾을 수 없습니다."},
 ]
-SEARCH_QUERIES = ["파이썬", "재테크", "마케팅", "디자인", "유튜브", "엑셀", "부업", "강의 만들기", "포토샵", "글쓰기"]
-
 REVIEWS_BY_RATING = {
     1: [
         "기대했던 것과 너무 달랐어요. 내용이 너무 부실합니다.",
@@ -88,17 +85,6 @@ def _base(event_type: str, ts: datetime) -> dict:
 
 
 # ── 이벤트 생성 함수 ───────────────────────────────────────────
-def make_page_view(ts: datetime) -> dict:
-    page = random.choice(PAGES)
-    course = random.choice(COURSES) if page == "강의상세" else None
-    return {
-        **_base("page_view", ts),
-        "page_name":  page,
-        "course_id":  course["course_id"] if course else None,
-        "referrer":   random.choice(["google", "naver", "direct", "instagram", "youtube", None]),
-    }
-
-
 def make_course_purchase(ts: datetime) -> dict:
     course = random.choice(COURSES)
     return {
@@ -149,14 +135,6 @@ def make_review_submit(ts: datetime) -> dict:
     }
 
 
-def make_search(ts: datetime) -> dict:
-    return {
-        **_base("search", ts),
-        "query":        random.choice(SEARCH_QUERIES),
-        "result_count": random.randint(0, 40),
-    }
-
-
 def make_error(ts: datetime) -> dict:
     err = random.choice(ERROR_CODES)
     return {
@@ -169,13 +147,11 @@ def make_error(ts: datetime) -> dict:
 
 # ── 이벤트 믹스 (현실적인 비율) ──────────────────────────────
 EVENT_FACTORIES = [
-    (make_page_view,       40),
-    (make_lecture_play,    25),
-    (make_lecture_complete, 15),
-    (make_search,          10),
-    (make_course_purchase,  5),
-    (make_review_submit,    3),
-    (make_error,            2),
+    (make_lecture_play,     40),
+    (make_lecture_complete, 25),
+    (make_course_purchase,  20),
+    (make_review_submit,    10),
+    (make_error,             5),
 ]
 
 _factories, _weights = zip(*EVENT_FACTORIES)

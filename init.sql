@@ -11,15 +11,6 @@ CREATE TABLE IF NOT EXISTS events (
     INDEX idx_timestamp  (timestamp)
 );
 
-CREATE TABLE IF NOT EXISTS event_page_view (
-    event_id  CHAR(36)    NOT NULL,
-    page_name VARCHAR(20) NOT NULL,
-    course_id VARCHAR(10),
-    referrer  VARCHAR(20),
-    PRIMARY KEY (event_id),
-    FOREIGN KEY (event_id) REFERENCES events(event_id)
-);
-
 CREATE TABLE IF NOT EXISTS event_course_purchase (
     event_id       CHAR(36)     NOT NULL,
     course_id      VARCHAR(10)  NOT NULL,
@@ -58,14 +49,6 @@ CREATE TABLE IF NOT EXISTS event_review_submit (
     course_title  VARCHAR(100) NOT NULL,
     rating        TINYINT      NOT NULL,
     review_text   TEXT         NOT NULL,
-    PRIMARY KEY (event_id),
-    FOREIGN KEY (event_id) REFERENCES events(event_id)
-);
-
-CREATE TABLE IF NOT EXISTS event_search (
-    event_id     CHAR(36)    NOT NULL,
-    query        VARCHAR(50) NOT NULL,
-    result_count INT         NOT NULL,
     PRIMARY KEY (event_id),
     FOREIGN KEY (event_id) REFERENCES events(event_id)
 );
