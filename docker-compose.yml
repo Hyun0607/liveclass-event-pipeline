@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: liveclas_mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: liveclas_events
+      MYSQL_USER: pipeline
+      MYSQL_PASSWORD: pipeline123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: liveclas_pipeline
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: liveclas_events
+      DB_USER: pipeline
+      DB_PASSWORD: pipeline123
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: liveclas_metabase
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - metabase_data:/metabase-data
+
+volumes:
+  mysql_data:
+  metabase_data:

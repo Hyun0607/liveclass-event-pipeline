@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+
+# Data
+events.json
+*.csv
+*.log
+
+# Docker
+mysql_data/
+metabase_data/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Visualization
+chart_*.png
