@@ -24,6 +24,9 @@
 # 1. 전체 스택 실행 (MySQL + 이벤트 생성 및 저장 + Metabase)
 docker compose up --build
 
+# 백그라운드만 실행하고 싶을 때
+docker compose up -d
+
 # 재실행 시 (DB 초기화 포함)
 docker compose down -v
 docker compose up --build
