@@ -1,4 +1,4 @@
-# 라이브클래스 이벤트 로그 파이프라인
+# 이벤트 로그 파이프라인
 
 라이브클래스(온라인 강의 판매 플랫폼)의 수강생 행동 이벤트를 생성하고, MySQL에 저장하고, 집계 분석 및 시각화하는 데이터 파이프라인입니다.
 
@@ -23,6 +23,9 @@
 ```bash
 # 1. 전체 스택 실행 (MySQL + 이벤트 생성 및 저장 + Metabase)
 docker compose up --build
+
+# 백그라운드만 실행하고 싶을 때
+docker compose up -d
 
 # 재실행 시 (DB 초기화 포함)
 docker compose down -v
@@ -106,11 +109,14 @@ SELECT
     course_id,
     course_title,
     category,
-    COUNT(*)   AS purchase_count,
+    COUNT(*) AS purchase_count,
     SUM(price) AS total_revenue
-FROM event_course_purchase
-GROUP BY course_id, course_title, category
-ORDER BY total_revenue DESC
+FROM
+    event_course_purchase
+GROUP BY
+    course_id, course_title, category
+ORDER BY
+    total_revenue DESC
 ```
 
 ### 분석 2. 시간대별 이벤트 추이
@@ -119,10 +125,13 @@ ORDER BY total_revenue DESC
 ```sql
 SELECT
     HOUR(timestamp) AS hour,
-    COUNT(*)        AS event_count
-FROM events
-GROUP BY HOUR(timestamp)
-ORDER BY hour
+    COUNT(*) AS event_count
+FROM
+    events
+GROUP BY
+    HOUR(timestamp)
+ORDER BY
+    hour
 ```
 
 ### 분석 3. 강의별 완강률
@@ -136,20 +145,32 @@ SELECT
     COALESCE(c.complete_count, 0) AS complete_count,
     ROUND(COALESCE(c.complete_count, 0) / p.play_count * 100, 1) AS completion_rate_pct
 FROM (
-    SELECT course_id, COUNT(*) AS play_count
-    FROM event_lecture_play
-    GROUP BY course_id
+    SELECT
+        course_id,
+        COUNT(*) AS play_count
+    FROM
+        event_lecture_play
+    GROUP BY
+        course_id
 ) p
 LEFT JOIN (
-    SELECT course_id, COUNT(*) AS complete_count
-    FROM event_lecture_complete
-    GROUP BY course_id
+    SELECT
+        course_id,
+        COUNT(*) AS complete_count
+    FROM
+        event_lecture_complete
+    GROUP BY
+        course_id
 ) c ON p.course_id = c.course_id
 LEFT JOIN (
-    SELECT DISTINCT course_id, course_title
-    FROM event_course_purchase
+    SELECT
+        DISTINCT course_id,
+        course_title
+    FROM
+        event_course_purchase
 ) cp ON p.course_id = cp.course_id
-ORDER BY completion_rate_pct DESC
+ORDER BY
+      completion_rate_pct DESC
 ```
 
 > `event_lecture_play`와 `event_lecture_complete`는 서로 직접 연결된 키가 없어, 각각 `course_id` 기준으로 집계한 뒤 JOIN하는 방식으로 처리했습니다.
