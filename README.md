@@ -109,11 +109,14 @@ SELECT
     course_id,
     course_title,
     category,
-    COUNT(*)   AS purchase_count,
+    COUNT(*) AS purchase_count,
     SUM(price) AS total_revenue
-FROM event_course_purchase
-GROUP BY course_id, course_title, category
-ORDER BY total_revenue DESC
+FROM
+    event_course_purchase
+GROUP BY
+    course_id, course_title, category
+ORDER BY
+    total_revenue DESC
 ```
 
 ### 분석 2. 시간대별 이벤트 추이
@@ -122,10 +125,13 @@ ORDER BY total_revenue DESC
 ```sql
 SELECT
     HOUR(timestamp) AS hour,
-    COUNT(*)        AS event_count
-FROM events
-GROUP BY HOUR(timestamp)
-ORDER BY hour
+    COUNT(*) AS event_count
+FROM
+    events
+GROUP BY
+    HOUR(timestamp)
+ORDER BY
+    hour
 ```
 
 ### 분석 3. 강의별 완강률
@@ -139,20 +145,32 @@ SELECT
     COALESCE(c.complete_count, 0) AS complete_count,
     ROUND(COALESCE(c.complete_count, 0) / p.play_count * 100, 1) AS completion_rate_pct
 FROM (
-    SELECT course_id, COUNT(*) AS play_count
-    FROM event_lecture_play
-    GROUP BY course_id
+    SELECT
+        course_id,
+        COUNT(*) AS play_count
+    FROM
+        event_lecture_play
+    GROUP BY
+        course_id
 ) p
 LEFT JOIN (
-    SELECT course_id, COUNT(*) AS complete_count
-    FROM event_lecture_complete
-    GROUP BY course_id
+    SELECT
+        course_id,
+        COUNT(*) AS complete_count
+    FROM
+        event_lecture_complete
+    GROUP BY
+        course_id
 ) c ON p.course_id = c.course_id
 LEFT JOIN (
-    SELECT DISTINCT course_id, course_title
-    FROM event_course_purchase
+    SELECT
+        DISTINCT course_id,
+        course_title
+    FROM
+        event_course_purchase
 ) cp ON p.course_id = cp.course_id
-ORDER BY completion_rate_pct DESC
+ORDER BY
+      completion_rate_pct DESC
 ```
 
 > `event_lecture_play`와 `event_lecture_complete`는 서로 직접 연결된 키가 없어, 각각 `course_id` 기준으로 집계한 뒤 JOIN하는 방식으로 처리했습니다.
