@@ -213,12 +213,6 @@ ORDER BY
 
 `docker compose up` 실행 후 `http://localhost:3000` 에서 Metabase에 접속합니다.
 
-**Metabase 로그인**
-
-| 아이디 | 비밀번호 |
-|---|---|
-| [lovearamis3@gmail.com] | [wjdgusdn1!] |
-
 **DB 연결 설정:**
 
 | 항목 | 값 |
