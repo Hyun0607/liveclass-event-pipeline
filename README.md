@@ -191,8 +191,6 @@ ORDER BY
 | `app` | 이벤트 생성 및 MySQL 저장 (자동 실행 후 종료) |
 | `metabase` | 집계 분석 및 시각화 대시보드 (port 3000) |
 
-MySQL 8.0의 기본 인증 방식(`caching_sha2_password`)이 Metabase JDBC 드라이버와 호환되지 않아 `--default-authentication-plugin=mysql_native_password` 옵션을 추가했습니다.
-
 ---
 
 ## Step 5. 시각화
