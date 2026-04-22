@@ -71,7 +71,7 @@ docker compose up --build
 
 | 필드 | 설명 |
 |---|---|
-| `event_id` | UUID 기반 고유 식별자 |
+| `event_id` | 고유 식별자 |
 | `event_type` | 이벤트 종류 |
 | `user_id` | 수강생 ID (200명) |
 | `session_id` | 접속 세션 식별자 |
