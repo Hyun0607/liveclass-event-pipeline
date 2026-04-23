@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-generator-deployment
+  labels:
+    app: event-generator
+spec:
+  replicas: 2  # 가용성을 위해 2개의 포드(Pod)를 띄웁니다.
+  selector:
+    matchLabels:
+      app: event-generator
+  template:
+    metadata:
+      labels:
+        app: event-generator
+    spec:
+      containers:
+      - name: event-generator
+        image: hyunwoo/event-generator:v1  # 현우님의 도커 이미지 주소
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
